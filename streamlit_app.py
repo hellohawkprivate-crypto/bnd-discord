@@ -6,7 +6,7 @@ import os
 # 設定
 CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
 CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
-REDIRECT_URI = "https://yourapp.streamlit.app/callback"
+REDIRECT_URI = "https://bnd-discord-fqttxjnjcsqh8cx25gb8ix.streamlit.app/"
 GUILD_ID = "123456789012345678"  # 所属サーバーのID
 
 def get_discord_auth_url():
