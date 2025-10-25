@@ -4,8 +4,10 @@ from urllib.parse import urlencode
 import os
 
 # 設定
-CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
-CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
+# CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
+CLIENT_ID = "1431549488186785856"
+# CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
+CLIENT_SECRET = "19120f5f6ae6304b38036094bd1e3ecfbecd912817cb17700212c641628f608c"
 REDIRECT_URI = "https://bnd-discord-fqttxjnjcsqh8cx25gb8ix.streamlit.app/"
 GUILD_ID = "123456789012345678"  # 所属サーバーのID
 
