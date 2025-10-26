@@ -101,9 +101,9 @@ if not st.session_state.login:
 else:
     st.success("✅ ログイン成功！")
     # uploaded_files = st.file_uploader("スクリーンショットをアップロード", accept_multiple_files=True, type=["png", "jpg"])
-    if uploaded_files:
-        st.write(f"{len(uploaded_files)}件のファイルが選択されています。")
-        if st.button("処理実行"):
-            st.write("処理を開始します...")
-            # ここに Google Drive保存 + OCR処理 + Sheets更新 のロジック
-            st.success("処理完了！")
+    # if uploaded_files:
+    #     st.write(f"{len(uploaded_files)}件のファイルが選択されています。")
+    #     if st.button("処理実行"):
+    #         st.write("処理を開始します...")
+    #         # ここに Google Drive保存 + OCR処理 + Sheets更新 のロジック
+    #         st.success("処理完了！")
