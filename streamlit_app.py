@@ -73,13 +73,15 @@ if "login" not in st.session_state:
 if not st.session_state.login:
     st.markdown("[Discordでログイン](" + get_discord_auth_url() + ")")
 
-    if "oauth_code" not in st.session_state:
-        params = st.query_params
-        code = params.get("code", [None])[0] if "code" in params else None
-        if code:
-            st.session_state["oauth_code"] = code
-    else:
+    params = st.query_params
+    code = params.get("code", [None])[0] if "code" in params else None
+    # --- code のワンタイム処理対策 ---
+    if "oauth_code" not in st.session_state and code:
+        st.session_state["oauth_code"] = code
+    elif "oauth_code" in st.session_state:
         code = st.session_state["oauth_code"]
+    else:
+        code = None
 
     if code:
         token_res = exchange_code_for_token(code)
