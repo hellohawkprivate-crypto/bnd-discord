@@ -29,6 +29,8 @@ def exchange_code_for_token(code):
     }
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     r = requests.post("https://discord.com/api/oauth2/token", data=data, headers=headers)
+    st.write("🔍 Discordからの応答ステータス:", r.status_code)
+    st.write("🔍 Discordからの応答テキスト:", r.text)
     try:
         return r.json()  # JSONとして返す
     except Exception:
