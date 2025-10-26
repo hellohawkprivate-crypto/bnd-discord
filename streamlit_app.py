@@ -7,7 +7,7 @@ import os
 # CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
 CLIENT_ID = "1431549488186785856"
 # CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
-CLIENT_SECRET = "19120f5f6ae6304b38036094bd1e3ecfbecd912817cb17700212c641628f608c"
+CLIENT_SECRET = "H8bwEWaVVjNtd4fqU8GdikxUKM8_sue_"
 REDIRECT_URI = "https://bnd-discord-fqttxjnjcsqh8cx25gb8ix.streamlit.app/"
 GUILD_ID = "1250843214017990797"  # 所属サーバーのID
 
