@@ -9,6 +9,8 @@ CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("DISCORD_REDIRECT_URI")
 GUILD_ID = os.getenv("DISCORD_GUILD_ID")  # 所属サーバーのID
 
+st.write("現在のREDIRECT_URI:", REDIRECT_URI)
+
 def get_discord_auth_url():
     params = {
         "client_id": CLIENT_ID,
