@@ -4,12 +4,10 @@ from urllib.parse import urlencode
 import os
 
 # 設定
-# CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
-CLIENT_ID = "1431549488186785856"
-# CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
-CLIENT_SECRET = "H8bwEWaVVjNtd4fqU8GdikxUKM8_sue_"
+CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
+CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
 REDIRECT_URI = "https://bnd-discord-fqttxjnjcsqh8cx25gb8ix.streamlit.app/"
-GUILD_ID = "1250843214017990797"  # 所属サーバーのID
+GUILD_ID = os.getenv("DISCORD_GUILD_ID") # 所属サーバーのID
 
 def get_discord_auth_url():
     params = {
