@@ -76,12 +76,17 @@ if not st.session_state.login:
     params = st.query_params
     code = params.get("code", [None])[0] if "code" in params else None
 
-    # --- codeのワンタイム使用対策 ---
-    if code and "oauth_code" not in st.session_state:
-        st.session_state["oauth_code"] = code
+    # ---- codeを一度だけ処理して即座に交換・rerun ----
+    if code and "used_code" not in st.session_state:
+        st.session_state["used_code"] = True
         token_res = exchange_code_for_token(code)
+        st.session_state["token_response"] = token_res
+        st.rerun()  # rerunして二重送信を防止
+    else:
+        token_res = st.session_state.get("token_response", None)
+
+    if token_res:
         access_token = token_res.get("access_token")
-    
         if not access_token:
             st.error("Discordトークンが取得できませんでした。")
             st.json(token_res)
@@ -94,9 +99,6 @@ if not st.session_state.login:
             st.rerun()
         else:
             st.error("指定サーバーに所属していません。")
-    elif "oauth_code" in st.session_state:
-        # すでにcodeを使っている場合は再処理しない
-        pass
 
 else:
     st.success("✅ ログイン成功！アップロード画面へ進んでください。")
