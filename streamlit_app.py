@@ -3,11 +3,19 @@ import requests
 from urllib.parse import urlencode
 import os
 
+# =====================
 # 設定
+# =====================
 CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
 CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("DISCORD_REDIRECT_URI")
 GUILD_ID = os.getenv("DISCORD_GUILD_ID")  # 所属サーバーのID
+
+st.write("現在のREDIRECT_URI:", REDIRECT_URI)
+
+# =====================
+# 関数定義
+# =====================
 
 def get_discord_auth_url():
     params = {
@@ -18,7 +26,9 @@ def get_discord_auth_url():
     }
     return f"https://discord.com/api/oauth2/authorize?{urlencode(params)}"
 
+
 def exchange_code_for_token(code):
+    """Discord認可コードをアクセストークンに交換"""
     data = {
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET,
@@ -32,16 +42,14 @@ def exchange_code_for_token(code):
     st.write("🔍 Discordからの応答ステータス:", r.status_code)
     st.write("🔍 Discordからの応答テキスト:", r.text)
     try:
-        return r.json()  # JSONとして返す
+        return r.json()
     except Exception:
         st.error(f"Discordから予期しない応答: {r.text}")
         return {}
-    if "access_token" not in data:
-        st.error("Discordトークンが返されませんでした:")
-        st.json(data)
-    return data
+
 
 def get_user_guilds(access_token):
+    """ユーザーが所属しているDiscordサーバー一覧を取得"""
     headers = {"Authorization": f"Bearer {access_token}"}
     r = requests.get("https://discord.com/api/users/@me/guilds", headers=headers)
 
@@ -51,12 +59,10 @@ def get_user_guilds(access_token):
         st.error(f"Discordから予期しない応答を受け取りました: {r.text}")
         return []
 
-    # Discord APIがエラーを返した場合
     if isinstance(data, dict) and data.get("message"):
         st.error(f"Discordエラー: {data.get('message')}")
         return []
 
-    # dataがリストでない場合も防御
     if not isinstance(data, list):
         st.error("サーバー情報の形式が不正です。以下が受信内容です：")
         st.json(data)
@@ -64,25 +70,26 @@ def get_user_guilds(access_token):
 
     return data
 
-# --- メイン処理 ---
+
+# =====================
+# メイン処理
+# =====================
+
 if "login" not in st.session_state:
     st.session_state.login = False
 
 if not st.session_state.login:
     st.markdown("[Discordでログイン](" + get_discord_auth_url() + ")")
 
-    params = st.experimental_get_query_params()
+    params = st.query_params  # ✅ 新APIに統一
     code = params.get("code", [None])[0] if "code" in params else None
 
-    # st.write("params:", params)
-
-    # ---- codeを一度だけ処理して即座に交換・rerun ----
+    # --- codeのワンタイム使用対策 ---
     if code and "used_code" not in st.session_state:
         st.session_state["used_code"] = True
         token_res = exchange_code_for_token(code)
         st.session_state["token_response"] = token_res
-        st.session_state["used_code"] = True
-        st.rerun()  # rerunして二重送信を防止
+        st.rerun()
     else:
         token_res = st.session_state.get("token_response", None)
 
@@ -92,7 +99,7 @@ if not st.session_state.login:
             st.error("Discordトークンが取得できませんでした。")
             st.json(token_res)
             st.stop()
-    
+
         guilds = get_user_guilds(access_token)
         if any(isinstance(g, dict) and str(g.get("id")) == str(GUILD_ID) for g in guilds):
             st.session_state.login = True
@@ -103,10 +110,16 @@ if not st.session_state.login:
 
 else:
     st.success("✅ ログイン成功！アップロード画面へ進んでください。")
-    uploaded_files = st.file_uploader("スクリーンショットをアップロード", accept_multiple_files=True, type=["png", "jpg"])
+
+    uploaded_files = st.file_uploader(
+        "スクリーンショットをアップロード",
+        accept_multiple_files=True,
+        type=["png", "jpg"]
+    )
+
     if uploaded_files:
         st.write(f"{len(uploaded_files)}件のファイルが選択されています。")
         if st.button("処理実行"):
             st.write("処理を開始します...")
-            # ここに Google Drive保存 + OCR処理 + Sheets更新 のロジック
+            # TODO: Google Drive保存 + OCR処理 + Sheets更新 のロジックをここに追加
             st.success("処理完了！")
