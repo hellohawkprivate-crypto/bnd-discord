@@ -84,6 +84,10 @@ if not st.session_state.login:
     params = dict(st.query_params)
     code = params.get("code", [None])[0] if "code" in params else None
 
+    print(st.query_params)
+
+    print(st.experimental_get_query_params())
+
     # --- codeのワンタイム使用対策 ---
     if code and "used_code" not in st.session_state:
         st.session_state["used_code"] = True
