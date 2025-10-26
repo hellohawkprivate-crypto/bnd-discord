@@ -75,29 +75,30 @@ if not st.session_state.login:
 
     params = st.query_params
     code = params.get("code", [None])[0] if "code" in params else None
-    # --- code のワンタイム処理対策 ---
-    if "oauth_code" not in st.session_state and code:
-        st.session_state["oauth_code"] = code
-    elif "oauth_code" in st.session_state:
-        code = st.session_state["oauth_code"]
-    else:
-        code = None
 
-    if code:
+    # --- codeのワンタイム使用対策 ---
+    if code and "oauth_code" not in st.session_state:
+        st.session_state["oauth_code"] = code
         token_res = exchange_code_for_token(code)
         access_token = token_res.get("access_token")
+    
         if not access_token:
             st.error("Discordトークンが取得できませんでした。")
+            st.json(token_res)
             st.stop()
-
+    
         guilds = get_user_guilds(access_token)
-        # --- 安全にギルドチェック ---
         if any(isinstance(g, dict) and str(g.get("id")) == str(GUILD_ID) for g in guilds):
             st.session_state.login = True
             st.session_state.access_token = access_token
             st.rerun()
         else:
             st.error("指定サーバーに所属していません。")
+    elif "oauth_code" in st.session_state:
+        # すでにcodeを使っている場合は再処理しない
+        pass
+    else:
+        st.markdown("[Discordでログイン](" + get_discord_auth_url() + ")")
 else:
     st.success("✅ ログイン成功！アップロード画面へ進んでください。")
     uploaded_files = st.file_uploader("スクリーンショットをアップロード", accept_multiple_files=True, type=["png", "jpg"])
