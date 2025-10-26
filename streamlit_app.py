@@ -45,10 +45,15 @@ if "login" not in st.session_state:
 
 if not st.session_state.login:
     st.markdown("[Discordでログイン]("+ get_discord_auth_url() +")")
-    code = st.experimental_get_query_params().get("code")
+    params = st.query_params
+    code = params.get("code", [None])[0] if "code" in params else None
+    
     if code:
         token_res = exchange_code_for_token(code[0])
         access_token = token_res.get("access_token")
+        if not access_token:
+            st.error("Discordトークンが取得できませんでした。")
+            st.stop()
         guilds = get_user_guilds(access_token)
         if any(g["id"] == GUILD_ID for g in guilds):
             st.session_state.login = True
@@ -56,6 +61,8 @@ if not st.session_state.login:
             st.experimental_rerun()
         else:
             st.error("指定サーバーに所属していません")
+    else:
+        st.markdown("[Discordでログイン](https://discord.com/api/oauth2/authorize?... )")
 else:
     st.write("ログイン成功！アップロード画面へ進んでください。")
     uploaded_files = st.file_uploader("スクリーンショットをアップロード", accept_multiple_files=True, type=["png","jpg"])
