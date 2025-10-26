@@ -9,8 +9,6 @@ CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("DISCORD_REDIRECT_URI")
 GUILD_ID = os.getenv("DISCORD_GUILD_ID")  # 所属サーバーのID
 
-st.write("現在のREDIRECT_URI:", REDIRECT_URI)
-
 def get_discord_auth_url():
     params = {
         "client_id": CLIENT_ID,
@@ -76,7 +74,7 @@ if not st.session_state.login:
     params = st.experimental_get_query_params()
     code = params.get("code", [None])[0] if "code" in params else None
 
-    st.write("params:", params)
+    # st.write("params:", params)
 
     # ---- codeを一度だけ処理して即座に交換・rerun ----
     if code and "used_code" not in st.session_state:
