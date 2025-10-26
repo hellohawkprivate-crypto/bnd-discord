@@ -49,7 +49,7 @@ if not st.session_state.login:
     code = params.get("code", [None])[0] if "code" in params else None
     
     if code:
-        token_res = exchange_code_for_token(code[0])
+        token_res = exchange_code_for_token(code)
         access_token = token_res.get("access_token")
         if not access_token:
             st.error("Discordトークンが取得できませんでした。")
