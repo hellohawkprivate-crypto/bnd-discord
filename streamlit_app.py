@@ -99,8 +99,8 @@ if not st.session_state.login:
             st.error("指定サーバーに所属していません。")
 
 else:
-    st.success("✅ ログイン成功！アップロード画面へ進んでください。")
-    uploaded_files = st.file_uploader("スクリーンショットをアップロード", accept_multiple_files=True, type=["png", "jpg"])
+    st.success("✅ ログイン成功！")
+    # uploaded_files = st.file_uploader("スクリーンショットをアップロード", accept_multiple_files=True, type=["png", "jpg"])
     if uploaded_files:
         st.write(f"{len(uploaded_files)}件のファイルが選択されています。")
         if st.button("処理実行"):
