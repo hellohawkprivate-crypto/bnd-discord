@@ -97,8 +97,7 @@ if not st.session_state.login:
     elif "oauth_code" in st.session_state:
         # すでにcodeを使っている場合は再処理しない
         pass
-    else:
-        st.markdown("[Discordでログイン](" + get_discord_auth_url() + ")")
+
 else:
     st.success("✅ ログイン成功！アップロード画面へ進んでください。")
     uploaded_files = st.file_uploader("スクリーンショットをアップロード", accept_multiple_files=True, type=["png", "jpg"])
