@@ -76,6 +76,8 @@ if not st.session_state.login:
     params = st.query_params
     code = params.get("code", [None])[0] if "code" in params else None
 
+    st.write("params:", params)
+
     # ---- codeを一度だけ処理して即座に交換・rerun ----
     if code and "used_code" not in st.session_state:
         st.session_state["used_code"] = True
