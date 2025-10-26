@@ -38,7 +38,25 @@ def exchange_code_for_token(code):
 def get_user_guilds(access_token):
     headers = {"Authorization": f"Bearer {access_token}"}
     r = requests.get("https://discord.com/api/users/@me/guilds", headers=headers)
-    return r.json()
+
+    try:
+        data = r.json()
+    except Exception:
+        st.error(f"Discordから予期しない応答を受け取りました: {r.text}")
+        return []
+
+    # Discord APIがエラーを返した場合
+    if isinstance(data, dict) and data.get("message"):
+        st.error(f"Discordエラー: {data.get('message')}")
+        return []
+
+    # dataがリストでない場合も防御
+    if not isinstance(data, list):
+        st.error("サーバー情報の形式が不正です。")
+        st.json(data)
+        return []
+
+    return data
 
 if "login" not in st.session_state:
     st.session_state.login = False
