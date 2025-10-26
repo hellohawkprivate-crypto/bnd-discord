@@ -81,7 +81,7 @@ if "login" not in st.session_state:
 if not st.session_state.login:
     st.markdown("[Discordでログイン](" + get_discord_auth_url() + ")")
 
-    params = st.query_params  # ✅ 新APIに統一
+    params = dict(st.query_params)
     code = params.get("code", [None])[0] if "code" in params else None
 
     # --- codeのワンタイム使用対策 ---
