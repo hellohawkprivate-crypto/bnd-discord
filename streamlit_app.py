@@ -34,6 +34,10 @@ def exchange_code_for_token(code):
     except Exception:
         st.error(f"Discordから予期しない応答: {r.text}")
         return {}
+    if "access_token" not in data:
+        st.error("Discordトークンが返されませんでした:")
+        st.json(data)
+    return data
 
 def get_user_guilds(access_token):
     headers = {"Authorization": f"Bearer {access_token}"}
