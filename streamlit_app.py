@@ -29,7 +29,11 @@ def exchange_code_for_token(code):
     }
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     r = requests.post("https://discord.com/api/oauth2/token", data=data, headers=headers)
-    return r.json()
+    try:
+        return r.json()  # JSONとして返す（これがdictになる）
+    except Exception:
+        st.error(f"Discordから予期しない応答: {r.text}")
+        return {}
 
 def get_user_guilds(access_token):
     headers = {"Authorization": f"Bearer {access_token}"}
