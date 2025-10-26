@@ -81,6 +81,7 @@ if not st.session_state.login:
         st.session_state["used_code"] = True
         token_res = exchange_code_for_token(code)
         st.session_state["token_response"] = token_res
+        st.query_params.clear()
         st.rerun()  # rerunして二重送信を防止
     else:
         token_res = st.session_state.get("token_response", None)
